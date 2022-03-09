@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +28,7 @@ public class TipoCambioController {
 	@Autowired
 	private TipoCambioService tipoCambioService;
 	
+	@CrossOrigin
 	@GetMapping("/v1/tiposdecambio/{origen}-{destino}")
 	public Single<ResponseEntity<TipoCambio>> buscar(@PathVariable("origen") String codMonedaOrigen, 
 							 						 @PathVariable("destino") String codMonedaDestino) {		
@@ -35,6 +37,7 @@ public class TipoCambioController {
 				.map(tipoCambioResponse -> ResponseEntity.ok(tipoCambioResponse));		
 	}
 	
+	@CrossOrigin
 	@GetMapping("/v1/tiposdecambio")
 	public Single<ResponseEntity<List<TipoCambio>>> listar() {		
 		return this.tipoCambioService.listar()
@@ -42,16 +45,17 @@ public class TipoCambioController {
 				.map(tipoCambioResponse -> ResponseEntity.ok(tipoCambioResponse));		
 	}
 	
+	@CrossOrigin
 	@PostMapping("/v1/tiposdecambio")
 	public TipoCambio insertar(@RequestBody TipoCambio tipoCambio) {
 		tipoCambio.setFecha(new java.util.Date());
 		return tipoCambioDAO.save(tipoCambio);
 	}
 	
+	@CrossOrigin
 	@PutMapping("/v1/tiposdecambio")
 	public TipoCambio actualizar(@RequestBody TipoCambio tipoCambio) {
 		tipoCambio.setFecha(new java.util.Date());
 		return tipoCambioDAO.save(tipoCambio);
 	}
-	
 }
