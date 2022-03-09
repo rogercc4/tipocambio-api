@@ -1,5 +1,7 @@
 package com.gestion.tipocambioapi.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,14 +29,21 @@ public class TipoCambioController {
 	
 	@GetMapping("/v1/tiposdecambio/{origen}-{destino}")
 	public Single<ResponseEntity<TipoCambio>> buscar(@PathVariable("origen") String codMonedaOrigen, 
-							 											@PathVariable("destino") String codMonedaDestino) {		
+							 						 @PathVariable("destino") String codMonedaDestino) {		
 		return this.tipoCambioService.buscar(codMonedaOrigen, codMonedaDestino)
 				.subscribeOn(Schedulers.io())
 				.map(tipoCambioResponse -> ResponseEntity.ok(tipoCambioResponse));		
 	}
 	
+	@GetMapping("/v1/tiposdecambio")
+	public Single<ResponseEntity<List<TipoCambio>>> listar() {		
+		return this.tipoCambioService.listar()
+				.subscribeOn(Schedulers.io())
+				.map(tipoCambioResponse -> ResponseEntity.ok(tipoCambioResponse));		
+	}
+	
 	@PostMapping("/v1/tiposdecambio")
-	public TipoCambio buscar(@RequestBody TipoCambio tipoCambio) {
+	public TipoCambio insertar(@RequestBody TipoCambio tipoCambio) {
 		tipoCambio.setFecha(new java.util.Date());
 		return tipoCambioDAO.save(tipoCambio);
 	}

@@ -1,6 +1,9 @@
 package com.gestion.tipocambioapi.services.impl;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -45,6 +48,23 @@ public class TipoCambioServiceImpl implements TipoCambioService {
 			} else {
 				singleSubscriber.onSuccess(optionalTipoCambio.get());
 			}
+		});
+	}
+
+	@Override
+	public Single<List<TipoCambio>> listar() {
+		return Single.create(singleSubscriber -> {
+			
+			Iterable<TipoCambio> itTipoCambio = this.tipoCambioDAO.findAll();
+			
+			List<TipoCambio> lstTipoCambio = StreamSupport.stream(itTipoCambio.spliterator(), false).collect(Collectors.toList());
+			
+			if ( lstTipoCambio.isEmpty() ) {
+				singleSubscriber.onError(new EntityNotFoundException());
+			} else {
+				singleSubscriber.onSuccess(lstTipoCambio);
+			}
+			
 		});
 	}
 }
